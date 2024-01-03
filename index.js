@@ -1,9 +1,19 @@
 require("dotenv").config();
 const express = require("express");
 const rateLimit = require("express-rate-limit");
+const { initDB } = require("./config/db");
 const apiRoutes = require("./routes/apiRoutes");
+const sanitizeBody = require("./middlewares/sanitizeBody");
 const app = express();
-const port = process.env.PORT || 5000;
+let port = 5000;
+
+if (process.env.NODE_ENV === "test") {
+  port = 3000;
+} else {
+  port = process.env.PORT || 5000;
+}
+
+app.use(express.json());
 
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
@@ -15,8 +25,13 @@ const limiter = rateLimit({
 //Using default 50 req/min/ip rate limitjng for all requests
 app.use(limiter);
 
-app.use("/api", apiRoutes);
+app.use("/api", sanitizeBody, apiRoutes);
 
 app.listen(port, () => {
   console.log(`API server listening on port: ${port}`);
+  if (process.env.NODE_ENV !== "test") {
+    initDB();
+  }
 });
+
+module.exports = app;
