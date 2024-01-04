@@ -1,4 +1,5 @@
 const Notes = require("../models/Note");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   async getAllNotes(req, res) {
@@ -102,7 +103,9 @@ module.exports = {
    */
   async getNote(req, res) {
     const { noteId } = req.params;
-    const { userId } = req;
+    const cookie = req?.cookies?.token;
+    const decoded = jwt.verify(cookie, process.env.JWT_SECRET);
+    const { userId } = decoded;
 
     if (!noteId) {
       return res.status(400).send({ message: "Note ID is required." });
@@ -116,7 +119,7 @@ module.exports = {
       }
 
       const isNoteSharedWithRequester = note.sharedWith.includes(userId);
-      const isRequesterNoteOwner = note.user.toString() !== userId;
+      const isRequesterNoteOwner = note.user.toString() === userId;
 
       if (!isNoteSharedWithRequester && !isRequesterNoteOwner) {
         return res
@@ -143,7 +146,7 @@ module.exports = {
     try {
       await Notes.findByIdAndDelete(noteId);
 
-      return res.send({
+      return res.status(204).send({
         message: "Note deleted successfully.",
       });
     } catch (error) {

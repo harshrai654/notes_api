@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
+const yaml = require("yamljs");
+const swaggerUi = require("swagger-ui-express");
 const { initDB } = require("./config/db");
 const apiRoutes = require("./routes/apiRoutes");
 const sanitizeBody = require("./middlewares/sanitizeBody");
@@ -16,6 +18,8 @@ if (process.env.NODE_ENV === "test") {
 
 app.use(express.json());
 app.use(cookieParser());
+const swaggerDocument = yaml.load("./swagger.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes

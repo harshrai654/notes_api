@@ -1,0 +1,409 @@
+swagger: "2.0"
+info:
+  title: Notes API
+  version: "1.0.0"
+  description: API for managing user notes with authentication.
+
+paths:
+  /api/auth/signup:
+    post:
+      summary: Create a new user account.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: requestBody
+          description: Request body for creating a new user.
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      responses:
+        "200":
+          description: User created successfully.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: User created successfully.
+          headers:
+            Set-Cookie:
+              description: JWT token for authentication after successful signup.
+              type: string
+              example: "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        "409":
+          description: Username already exists.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Username already exists.
+        "400":
+          description: Username and password are required.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Username and password are required.
+
+  /api/auth/login:
+    post:
+      summary: Log-in to existing user account.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: requestBody
+          description: Request body for logging in.
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      responses:
+        "200":
+          description: Logged in successfully.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Logged in successfully.
+          headers:
+            Set-Cookie:
+              description: JWT token for authentication after successful login.
+              type: string
+              example: "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        "400":
+          description: Username and password are required.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Username and password are required.
+        "401":
+          description: Invalid username or password.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Invalid username or password.
+
+  /api/notes:
+    get:
+      summary: Get a list of all notes for the authenticated user.
+      security:
+        - cookieAuth: []
+
+      responses:
+        "200":
+          description: List of notes retrieved successfully.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Note"
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Unauthorized.
+    post:
+      summary: Create a new note for the authenticated user.
+      security:
+        - cookieAuth: []
+
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: requestBody
+          description: Request body for creating a new note.
+          required: true
+          schema:
+            $ref: "#/definitions/Note"
+
+      responses:
+        "201":
+          description: Note created successfully.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note created successfully.
+              note:
+                title: New Note
+                content: This is a new note.
+
+        "400":
+          description: Note title and content are required.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note title and content are required.
+
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Unauthorized.
+
+  /api/notes/{id}:
+    get:
+      summary: Get a note by ID for the authenticated user.
+      parameters:
+        - name: id
+          description: Note ID
+          in: path
+          required: true
+          type: string
+      security:
+        - cookieAuth: []
+
+      responses:
+        "200":
+          description: Note retrieved successfully.
+          schema:
+            $ref: "#/definitions/Note"
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Unauthorized.
+        "400":
+          description: Note ID is required.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note ID is required.
+        "404":
+          description: Note not found.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note not found.
+        "403":
+          description: Forbidden.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: You are not authorized to view this note.
+
+    put:
+      summary: Update an existing note by ID for the authenticated user.
+      parameters:
+        - name: id
+          description: Note ID
+          in: path
+          required: true
+          type: string
+        - in: body
+          name: requestBody
+          description: Request body for updating a new note.
+          required: true
+          schema:
+            $ref: "#/definitions/Note"
+      security:
+        - cookieAuth: []
+
+      responses:
+        "200":
+          description: Note updated successfully.
+          schema:
+            $ref: "#/definitions/Note"
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Unauthorized.
+        "400":
+          description: Note title or content are required.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note title or content are required.
+        "404":
+          description: Note not found.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note not found.
+        "403":
+          description: Forbidden.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: You are not authorized to view this note.
+
+    delete:
+      summary: Delete a note by ID for the authenticated user.
+      parameters:
+        - name: id
+          in: path
+          description: Note ID
+          required: true
+          type: string
+      security:
+        - cookieAuth: []
+
+      responses:
+        "204":
+          description: Note deleted successfully.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note deleted successfully.
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Unauthorized.
+        "400":
+          description: Note ID is required.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note ID is required.
+        "404":
+          description: Note not found.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note not found.
+
+  /api/notes/{id}/share:
+    post:
+      summary: Share a note with another user for the authenticated user.
+      parameters:
+        - name: id
+          description: Note ID
+          in: path
+          required: true
+          type: string
+        - in: body
+          name: requestBody
+          description: Request body for providing destination user
+          required: true
+          schema:
+            type: object
+            properties:
+              toUserId:
+                type: string
+      security:
+        - cookieAuth: []
+
+      responses:
+        "200":
+          description: Note shared successfully.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note shared successfully.
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Unauthorized.
+        "400":
+          description: Note ID is required.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note ID is required.
+        "404":
+          description: Note not found.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Note not found.
+
+  /api/search:
+    get:
+      summary: Search for notes based on keywords for the authenticated user.
+      parameters:
+        - name: q
+          in: query
+          required: true
+          type: string
+      security:
+        - cookieAuth: []
+
+      responses:
+        "200":
+          description: List of notes retrieved successfully.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Note"
+        "401":
+          description: Unauthorized.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Unauthorized.
+        "400":
+          description: Search query is required.
+          schema:
+            $ref: "#/definitions/MessageResponse"
+          examples:
+            application/json:
+              message: Search query is required.
+
+securityDefinitions:
+  cookieAuth:
+    type: apiKey
+    name: Cookie
+    in: cookie
+    description: The JWT token should be included in the 'Cookie' header.
+
+definitions:
+  MessageResponse:
+    type: object
+    properties:
+      message:
+        type: string
+  Note:
+    type: object
+    properties:
+      title:
+        type: string
+      content:
+        type: string
+  User:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
