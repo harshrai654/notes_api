@@ -4,7 +4,6 @@ const request = require("supertest");
 const jwt = require("jsonwebtoken");
 const server = require("../index");
 const User = require("../models/User");
-const { beforeEach } = require("mocha");
 const expect = chai.expect;
 
 describe("Signup Handler [/api/auth/signup]", () => {

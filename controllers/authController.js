@@ -28,7 +28,10 @@ module.exports = {
       });
 
       // Send JWT token in response as a cookie
-      res.cookie("token", token, { httpOnly: true });
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      });
 
       // Send success message in response
       res.status(201).send({ message: "User created successfully." });
@@ -66,7 +69,10 @@ module.exports = {
         expiresIn: "24h",
       });
 
-      res.cookie("token", token, { httpOnly: true });
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      });
 
       res.status(200).send({ message: "Logged in successfully." });
     } catch (error) {

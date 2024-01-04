@@ -1,6 +1,8 @@
 const express = require("express");
 const authRoutes = require("./authRoutes");
 const notesRoutes = require("./notesRoutes");
+const searchRoutes = require("./searchRoutes");
+const authenticateUser = require("../middlewares/authenticateUser");
 
 const router = express.Router();
 
@@ -8,6 +10,8 @@ const router = express.Router();
 router.use("/auth", authRoutes);
 
 // Mount the notesRoutes router on /api
-router.use("/notes", notesRoutes);
+router.use("/notes", authenticateUser, notesRoutes);
+
+router.use("/search", authenticateUser, searchRoutes);
 
 module.exports = router;
