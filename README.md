@@ -48,3 +48,17 @@ This is an API for notes. It allows you to create, read, update, delete, share a
 
 - After server is running, go to `http://localhost:<5000 | PORT given in .env>` and test the API
 - To test the API with Swagger UI, go to `http://localhost:<5000 | PORT given in .env>/api-docs/index.html`
+- To check test coverage open `<directory_path_to_repo_root>/notes_api/coverage/index.html`. For coverage files to be generated you first need to run thes test with `npm test`
+
+## Test Coverage
+
+- [nyc](https://www.npmjs.com/package/nyc) for code coverage
+- [mocha](https://www.npmjs.com/package/mocha) for test runner
+
+### Overall Code Coverage
+
+![overall_code_coverage](./readme_static_files/overall_test_coverage.png)
+
+### Business Logic Test Coverage
+
+![business_logic_coverage](./readme_static_files/controller_test_coverage.png)
