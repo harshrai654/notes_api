@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
-const DB_URI = process.env.DB_URI;
 const CONNECTION_POOL_SIZE = process.env.CONNECTION_POOL_SIZE;
 
 module.exports = {
-  initDB() {
+  initDB(DB_URI) {
     mongoose
       .connect(DB_URI, {
         minPoolSize: CONNECTION_POOL_SIZE,

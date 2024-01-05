@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha \"tests/*.test.js\" --exit --timeout 60000",
+    "test": "cross-env NODE_ENV=test nyc --reporter=html mocha \"tests/*.test.js\" --exit --quiet --timeout 60000",
     "dev": "nodemon index.js"
   },
   "author": "",
@@ -25,6 +25,7 @@
     "chai": "4.0.0",
     "cross-env": "^7.0.3",
     "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
     "sinon": "^17.0.1",
     "supertest": "^6.3.3"
   }

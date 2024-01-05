@@ -1,4 +1,5 @@
 const Notes = require("../models/Note");
+const Users = require("../models/User");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
@@ -146,9 +147,7 @@ module.exports = {
     try {
       await Notes.findByIdAndDelete(noteId);
 
-      return res.status(204).send({
-        message: "Note deleted successfully.",
-      });
+      return res.sendStatus(204);
     } catch (error) {
       console.error(error);
       return res.status(500).send({
@@ -171,6 +170,13 @@ module.exports = {
     }
 
     try {
+      //Check if user exists
+      const destinationUser = await Users.findById(toUserId);
+
+      if (!destinationUser) {
+        return res.status(404).send({ message: "Destination user not found." });
+      }
+
       const note = await Notes.findByIdAndUpdate(noteId, {
         $addToSet: { sharedWith: toUserId },
       });

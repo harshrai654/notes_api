@@ -269,11 +269,6 @@ paths:
       responses:
         "204":
           description: Note deleted successfully.
-          schema:
-            $ref: "#/definitions/MessageResponse"
-          examples:
-            application/json:
-              message: Note deleted successfully.
         "401":
           description: Unauthorized.
           schema:

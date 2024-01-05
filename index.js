@@ -36,7 +36,9 @@ app.use("/api", sanitizeBody, apiRoutes);
 app.listen(port, () => {
   console.log(`API server listening on port: ${port}`);
   if (process.env.NODE_ENV !== "test") {
-    initDB();
+    initDB(process.env.DB_URI);
+  } else {
+    initDB(process.env.TEST_DB_URI);
   }
 });
 

@@ -23,6 +23,7 @@ describe("Signup Handler [/api/auth/signup]", () => {
         password: "test",
       },
     };
+    //Simulating unique username
     sandbox.stub(User, "findOne").resolves(null);
     sandbox.stub(User.prototype, "save").resolves({
       _id: "test_id",
