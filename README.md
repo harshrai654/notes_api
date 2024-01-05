@@ -35,6 +35,7 @@ This is an API for notes. It allows you to create, read, update, delete, share a
 
   ```
   DB_URI = mongodb://127.0.0.1:27017/UserNotes
+  TEST_DB_URI = mongodb://127.0.0.1:27017/UserTestNotes
   CONNECTION_POOL_SIZE = 10
   JWT_SECRET = secret@1234
   NODE_ENV = dev
