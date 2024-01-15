@@ -16,6 +16,8 @@ if (process.env.NODE_ENV === "test") {
   port = process.env.PORT || 5000;
 }
 
+//ToDo: Implement mem cache
+
 app.use(express.json());
 app.use(cookieParser());
 const swaggerDocument = yaml.load("./swagger.yaml");
