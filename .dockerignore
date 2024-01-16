@@ -1,0 +1,8 @@
+node_modules
+.github
+.nyc_output
+coverage
+data
+readme_static_files
+.env
+README.md

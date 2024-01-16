@@ -1,0 +1,23 @@
+services:
+  app:
+    container_name: notes_api
+    build: .
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+    volumes:
+      - ./coverage:/app/coverage
+  mongo:
+    container_name: notes_api_mongodb
+    image: mongo
+    ports:
+      - 27018:27017
+    volumes:
+      - ./data:/data
+
+volumes:
+  data:
+  coverage:
