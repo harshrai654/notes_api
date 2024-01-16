@@ -11,8 +11,11 @@ services:
       - .env
     volumes:
       - ./coverage:/app/coverage
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
     environment:
-      - NODE_ENV = prod
+      - NODE_ENV = dev
   mongo:
     container_name: notes_api_mongodb
     image: mongo
