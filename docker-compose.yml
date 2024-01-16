@@ -5,7 +5,8 @@ services:
     ports:
       - ${PORT}:${PORT}
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     env_file:
       - .env
     volumes:
@@ -15,8 +16,18 @@ services:
     image: mongo
     ports:
       - 27018:27017
+    expose:
+      - 27017
     volumes:
       - ./data:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: test_mongo
+      MONGO_INITDB_ROOT_PASSWORD: test_password
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 3s
+      timeout: 3s
+      retries: 3
 
 volumes:
   data:
