@@ -8,13 +8,7 @@ const { initDB, closeDBConnections } = require("./config/db");
 const apiRoutes = require("./routes/apiRoutes");
 const sanitizeBody = require("./middlewares/sanitizeBody");
 const app = express();
-let port = 5000;
-
-if (process.env.NODE_ENV === "test") {
-  port = 3000;
-} else {
-  port = process.env.PORT || 5000;
-}
+const port = process.env.PORT || 5000;
 
 //ToDo: Implement mem cache
 
@@ -37,11 +31,7 @@ app.use("/api", sanitizeBody, apiRoutes);
 
 const server = app.listen(port, () => {
   console.log(`API server listening on port: ${port}`);
-  if (process.env.NODE_ENV !== "test") {
-    initDB(process.env.DB_URI, process.env.DB_NAME);
-  } else {
-    initDB(process.env.TEST_DB_URI, process.env.TEST_DB_NAME);
-  }
+  initDB(process.env.DB_URI, process.env.DB_NAME);
 });
 
 function shutdownGracefully() {
