@@ -4,21 +4,22 @@ services:
     build:
       context: .
       target: development
-    env_file: .env
-    ports:
-      - ${PORT}:${PORT}
+    environment:
+      - DB_URI=${DB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CONNECTION_POOL_SIZE=${CONNECTION_POOL_SIZE}
+      - PORT=${PORT}
     depends_on:
       mongo:
         condition: service_healthy
     volumes:
       - ./coverage:/app/coverage
-      - .:/app
       - /app/node_modules
   mongo:
     container_name: notes_api_mongodb_dev
     image: mongo
-    ports:
-      - 27019:27017
     expose:
       - 27017
     volumes:

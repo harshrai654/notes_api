@@ -4,13 +4,18 @@ services:
     build:
       context: .
       target: production
+    environment:
+      - DB_URI=${DB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CONNECTION_POOL_SIZE=${CONNECTION_POOL_SIZE}
+      - PORT=${PORT}
     ports:
       - ${PORT}:${PORT}
     depends_on:
       mongo:
         condition: service_healthy
-    env_file:
-      - .env
 
   mongo:
     container_name: notes_api_mongodb
@@ -22,13 +27,12 @@ services:
     volumes:
       - ./data:/data
     environment:
-      MONGO_INITDB_ROOT_USERNAME: test_mongo
-      MONGO_INITDB_ROOT_PASSWORD: test_password
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 3s
       timeout: 3s
       retries: 3
-
 volumes:
   data:

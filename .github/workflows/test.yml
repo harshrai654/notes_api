@@ -11,21 +11,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: tests
+    env:
+      DB_URI: ${{ secrets.DB_URI }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      CONNECTION_POOL_SIZE: ${{ vars.CONNECTION_POOL_SIZE }}
+      DB_NAME: ${{ vars.DB_NAME }}
+      PORT: ${{ vars.PORT }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Setup Docker Compose and build
-        run: |
-          DB_URI=${{ secrets.DB_URI }} |
-          JWT_SECRET=${{ secrets.JWT_SECRET }} |
-          DB_USER=${{ secrets.DB_USER }} |
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }} |
-          CONNECTION_POOL_SIZE=${{ vars.CONNECTION_POOL_SIZE }} |
-          DB_NAME=${{ vars.DB_NAME }} |
-          PORT=${{ vars.PORT }} |
-          docker compose up -f docker-compose.dev.yml up --build -d
+        run: docker-compose -f docker-compose.ci.yml up --force-recreate --build -d
 
       - name: Run Tests
         run: docker exec -it notes_api_dev npm test
@@ -36,4 +38,4 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Tear down Docker Compose
-        run: docker compose -f docker-compose.dev.yml down
+        run: docker compose -f docker-compose.ci.yml down
