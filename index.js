@@ -4,7 +4,7 @@ const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 const yaml = require("yamljs");
 const swaggerUi = require("swagger-ui-express");
-const { initDB } = require("./config/db");
+const { initDB, closeDBConnections } = require("./config/db");
 const apiRoutes = require("./routes/apiRoutes");
 const sanitizeBody = require("./middlewares/sanitizeBody");
 const app = express();
@@ -35,7 +35,7 @@ app.use(limiter);
 
 app.use("/api", sanitizeBody, apiRoutes);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`API server listening on port: ${port}`);
   if (process.env.NODE_ENV !== "test") {
     initDB(process.env.DB_URI, process.env.DB_NAME);
@@ -43,5 +43,16 @@ app.listen(port, () => {
     initDB(process.env.TEST_DB_URI, process.env.TEST_DB_NAME);
   }
 });
+
+function shutdownGracefully() {
+  console.log("Shutting down gracefully");
+  server.close(async (err) => {
+    await closeDBConnections();
+    process.exit(err ? 1 : 0);
+  });
+}
+
+process.on("SIGTERM", shutdownGracefully);
+process.on("SIGINT", shutdownGracefully);
 
 module.exports = app;

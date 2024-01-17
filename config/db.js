@@ -27,4 +27,8 @@ module.exports = {
 
     mongoose.connection.on("error", (err) => console.log(`DB error: ${err}`));
   },
+
+  closeDBConnections() {
+    return mongoose.disconnect();
+  },
 };

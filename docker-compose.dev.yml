@@ -1,7 +1,9 @@
 services:
-  app:
-    container_name: notes_api
-    build: .
+  app-dev:
+    container_name: notes_api_dev
+    build:
+      context: .
+      target: development
     ports:
       - ${PORT}:${PORT}
     depends_on:
@@ -13,14 +15,12 @@ services:
       - ./coverage:/app/coverage
       - .:/app
       - /app/node_modules
-    command: npm run dev
-    environment:
-      - NODE_ENV = dev
+
   mongo:
-    container_name: notes_api_mongodb
+    container_name: notes_api_mongodb_dev
     image: mongo
     ports:
-      - 27018:27017
+      - 27019:27017
     expose:
       - 27017
     volumes:

@@ -1,7 +1,9 @@
 services:
   app:
     container_name: notes_api
-    build: .
+    build:
+      context: .
+      target: production
     ports:
       - ${PORT}:${PORT}
     depends_on:
@@ -9,10 +11,7 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    volumes:
-      - ./coverage:/app/coverage
-    environment:
-      - NODE_ENV = prod
+
   mongo:
     container_name: notes_api_mongodb
     image: mongo
@@ -33,4 +32,3 @@ services:
 
 volumes:
   data:
-  coverage:
