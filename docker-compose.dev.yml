@@ -1,6 +1,5 @@
 services:
   app-dev:
-    user: node
     container_name: notes_api_dev
     build:
       context: .

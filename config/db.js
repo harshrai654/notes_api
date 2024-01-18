@@ -25,7 +25,11 @@ module.exports = {
       console.log(`DB connection disconnected!`)
     );
 
-    mongoose.connection.on("error", (err) => console.log(`DB error: ${err}`));
+    mongoose.connection.on("error", (err) => {
+      console.log(`DB error: ${err}`);
+      //ToDo
+      //Exit process so that server can shutdown gracefully
+    });
   },
 
   closeDBConnections() {

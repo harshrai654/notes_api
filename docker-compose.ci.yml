@@ -1,6 +1,5 @@
 services:
   app-dev:
-    user: node
     container_name: notes_api_ci
     build:
       context: .
@@ -19,6 +18,8 @@ services:
   mongo:
     container_name: notes_api_mongodb_ci
     image: mongo
+    ports:
+      - 27020:27017
     expose:
       - 27017
     volumes:

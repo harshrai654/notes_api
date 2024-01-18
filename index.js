@@ -3,12 +3,11 @@ const express = require("express");
 const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 const yaml = require("yamljs");
+const { initDB } = require("./config/db");
 const swaggerUi = require("swagger-ui-express");
-const { initDB, closeDBConnections } = require("./config/db");
 const apiRoutes = require("./routes/apiRoutes");
 const sanitizeBody = require("./middlewares/sanitizeBody");
 const app = express();
-const port = process.env.PORT || 5000;
 
 //ToDo: Implement mem cache
 
@@ -24,25 +23,11 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
+initDB(process.env.DB_URI, process.env.DB_NAME);
+
 //Using default 50 req/min/ip rate limitjng for all requests
 app.use(limiter);
 
 app.use("/api", sanitizeBody, apiRoutes);
-
-const server = app.listen(port, () => {
-  console.log(`API server listening on port: ${port}`);
-  initDB(process.env.DB_URI, process.env.DB_NAME);
-});
-
-function shutdownGracefully() {
-  console.log("Shutting down gracefully");
-  server.close(async (err) => {
-    await closeDBConnections();
-    process.exit(err ? 1 : 0);
-  });
-}
-
-process.on("SIGTERM", shutdownGracefully);
-process.on("SIGINT", shutdownGracefully);
 
 module.exports = app;
