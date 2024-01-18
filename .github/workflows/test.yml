@@ -34,7 +34,7 @@ jobs:
         run: docker-compose -f docker-compose.ci.yml up --force-recreate --build -d
 
       - name: Run Tests
-        run: docker exec notes_api_ci npm test
+        run: docker exec notes_api_ci sudo npm test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
