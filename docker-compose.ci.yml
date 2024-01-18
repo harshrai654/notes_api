@@ -1,5 +1,6 @@
 services:
   app-dev:
+    user: node
     container_name: notes_api_ci
     build:
       context: .
@@ -18,6 +19,7 @@ services:
       - ./coverage:/app/coverage
       - /app/node_modules
   mongo:
+    user: node
     container_name: notes_api_mongodb_ci
     image: mongo
     expose:
