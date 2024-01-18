@@ -1,6 +1,6 @@
 services:
   app-dev:
-    container_name: notes_api_dev
+    container_name: notes_api_ci
     build:
       context: .
       target: development
@@ -18,7 +18,7 @@ services:
       - ./coverage:/app/coverage
       - /app/node_modules
   mongo:
-    container_name: notes_api_mongodb_dev
+    container_name: notes_api_mongodb_ci
     image: mongo
     expose:
       - 27017
