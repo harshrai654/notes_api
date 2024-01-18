@@ -19,7 +19,6 @@ services:
         condition: service_healthy
 
   mongo:
-    user: node
     container_name: notes_api_mongodb
     image: mongo
     ports:
