@@ -27,17 +27,11 @@ This is an API for notes. It allows you to create, read, update, delete, share a
 
 ## Steps to setup and run the API locally
 
-Create `.env` file at the root of the repository
+Copy `.env.example` to `.env` and fill in the required values
 
-Example of `.env` file:
+> cp .env.example .env
 
-```
-DB_URI = mongodb://mongodb:27017/UserNotes
-TEST_DB_URI = mongodb://mongodb:27017/UserTestNotes
-CONNECTION_POOL_SIZE = 10
-JWT_SECRET = secret@1234
-NODE_ENV = dev
-```
+When running locally .env file be used by `docker-compose.dev.yml` file to fee env vars to containers
 
 There are two options to setup the API locally:
 
@@ -46,9 +40,13 @@ There are two options to setup the API locally:
 
 ### Deploy Everything with Docker
 
-- `docker-compose up` to start the API server
-  > This will start API server with container name `notes_api` and mongodb container name `notes_api_mongodb`
-- For running tests use `docker exec -it notes_api npm test`
+- `docker-compose -f docker-compose.dev.yml up --build -d` to start the API server and mongodb
+  > This will start API server with container name `notes_api_dev` and mongodb container with name `notes_api_mongodb_dev`
+- To connect with MongoDB in host machine with. for example mongodb compass use URI as
+  > `mongodb://<DB_USER>:<DB_PASSWORD>@127.0.0.1:27019/UserNotes`
+- For running tests use `docker exec -it notes_api_dev npm run dev-test`
+- `dev-test` will generate test coverage reports in `./coverage` in html format
+- Hot reloading is enabled in `docker-compose.dev.yml`
 
 ### Setup the API with DB on your host machine directly
 
@@ -56,7 +54,7 @@ There are two options to setup the API locally:
 
 - Run `npm install` to install dependencies
 - Run `npm run dev` to start the API server
-- Test the API with `npm test`
+- Test the API with `npm run dev-test`
 
 ### Swagger UI and Test Coverage
 
