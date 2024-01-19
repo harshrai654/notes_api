@@ -14,6 +14,8 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+    volumes:
+      - ./coverage:/app/coverage
 
   mongo:
     container_name: notes_api_mongodb_ci
@@ -34,3 +36,4 @@ services:
       retries: 3
 volumes:
   data:
+  coverage:
