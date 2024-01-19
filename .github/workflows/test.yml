@@ -40,6 +40,8 @@ jobs:
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          files: ./coverage/lcov.info
 
       - name: Tear down Docker Compose
         run: docker-compose -f docker-compose.ci.yml down
