@@ -4,6 +4,10 @@
 
 This is an API for notes. It allows you to create, read, update, delete, share and search for notes.
 
+### Status Badges
+
+[![codecov](https://codecov.io/gh/harshrai654/notes_api/graph/badge.svg?token=W8Y2F3R54S)](https://codecov.io/gh/harshrai654/notes_api)
+
 ## Tech Stack
 
 - [Express.js](https://expressjs.com/) for server side API framework
