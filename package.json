@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test nyc --reporter=json-summary mocha \"tests/*.test.js\" --exit --quiet --timeout 60000",
+    "test": "cross-env NODE_ENV=test nyc --reporter=lcov mocha \"tests/*.test.js\" --exit --quiet --timeout 60000",
     "dev-test": "cross-env NODE_ENV=test nyc --reporter=html mocha \"tests/*.test.js\" --exit --quiet --timeout 60000",
     "dev": "nodemon server.js",
     "start": "node server.js"
